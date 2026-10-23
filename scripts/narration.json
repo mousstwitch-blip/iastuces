@@ -1,0 +1,39 @@
+[
+ {"scene":"hook","chunks":[
+  ["Ce point, c'est un avion de ligne.","Ce point, c'est un avion de ligne."],
+  ["Regardez bien.","Regardez bien."]]},
+ {"scene":"title","chunks":[
+  ["Huit mars deux mille quatorze. Vol MH370.","8 mars 2014. Vol MH370."],
+  ["Deux cent trente-neuf personnes à bord.","239 personnes à bord."],
+  ["On ne l'a jamais retrouvé.","On ne l'a jamais retrouvé."]]},
+ {"scene":"transponder","chunks":[
+  ["Un radar de contrôle ne voit pas vraiment les avions.","Un radar de contrôle ne voit pas vraiment les avions."],
+  ["Il les interroge,","Il les interroge,"],
+  ["et l'avion répond, grâce à son transpondeur.","et l'avion répond, grâce à son transpondeur."]]},
+ {"scene":"goodnight","chunks":[
+  ["À une heure dix-neuf, le pilote salue :","À 1 h 19, le pilote salue :"],
+  ["Bonne nuit, Malaysian trois sept zéro.","« Bonne nuit, Malaysian trois sept zéro. »"],
+  ["Deux minutes plus tard, le transpondeur se tait.","Deux minutes plus tard, le transpondeur se tait."]]},
+ {"scene":"military","chunks":[
+  ["Le radar militaire capte encore son écho.","Le radar militaire capte encore son écho."],
+  ["L'avion fait demi-tour, traverse la Malaisie,","L'avion fait demi-tour, traverse la Malaisie…"],
+  ["puis s'efface, à deux heures vingt-deux.","…puis s'efface, à 2 h 22."]]},
+ {"scene":"curvature","chunks":[
+  ["Car loin des côtes, la Terre est ronde :","Car loin des côtes, la Terre est ronde :"],
+  ["les radars ne voient plus rien au-dessus des océans.","les radars ne voient plus rien au-dessus des océans."]]},
+ {"scene":"satellite","chunks":[
+  ["Dernier témoin : un satellite.","Dernier témoin : un satellite."],
+  ["Ses signaux donnent une distance, pas une position.","Ses signaux donnent une distance, pas une position."],
+  ["Juste un arc, à travers l'océan Indien.","Juste un arc, à travers l'océan Indien."]]},
+ {"scene":"search","chunks":[
+  ["Cent vingt mille kilomètres carrés de fonds marins fouillés.","120 000 km² de fonds marins fouillés."],
+  ["On ne retrouve que des débris,","On ne retrouve que des débris,"],
+  ["dont un morceau d'aile, échoué à La Réunion.","dont un morceau d'aile, échoué à La Réunion."]]},
+ {"scene":"rule","chunks":[
+  ["Depuis, au-dessus des océans,","Depuis, au-dessus des océans,"],
+  ["les avions de ligne doivent signaler leur position au moins toutes les quinze minutes.","les avions de ligne doivent signaler leur position au moins toutes les 15 minutes."]]},
+ {"scene":"end","chunks":[
+  ["En deux mille vingt-six, une nouvelle recherche a échoué.","En 2026, une nouvelle recherche a échoué."],
+  ["Un avion ne disparaît pas.","Un avion ne disparaît pas."],
+  ["Il sort de ce que nos radars savent voir.","Il sort de ce que nos radars savent voir."]]}
+]
