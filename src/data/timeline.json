@@ -1,0 +1,220 @@
+{
+ "fps": 30,
+ "durationInFrames": 1800,
+ "scenes": [
+  {
+   "id": "hook",
+   "from": 0,
+   "durationInFrames": 111
+  },
+  {
+   "id": "title",
+   "from": 111,
+   "durationInFrames": 195
+  },
+  {
+   "id": "transponder",
+   "from": 306,
+   "durationInFrames": 182
+  },
+  {
+   "id": "goodnight",
+   "from": 488,
+   "durationInFrames": 195
+  },
+  {
+   "id": "military",
+   "from": 683,
+   "durationInFrames": 184
+  },
+  {
+   "id": "curvature",
+   "from": 867,
+   "durationInFrames": 127
+  },
+  {
+   "id": "satellite",
+   "from": 994,
+   "durationInFrames": 184
+  },
+  {
+   "id": "search",
+   "from": 1178,
+   "durationInFrames": 182
+  },
+  {
+   "id": "rule",
+   "from": 1360,
+   "durationInFrames": 166
+  },
+  {
+   "id": "end",
+   "from": 1526,
+   "durationInFrames": 274
+  }
+ ],
+ "captions": [
+  {
+   "scene": "hook",
+   "text": "Ce point, c'est un avion de ligne.",
+   "from": 8,
+   "durationInFrames": 41
+  },
+  {
+   "scene": "hook",
+   "text": "Regardez bien.",
+   "from": 56,
+   "durationInFrames": 24
+  },
+  {
+   "scene": "title",
+   "text": "8 mars 2014. Vol MH370.",
+   "from": 118,
+   "durationInFrames": 95
+  },
+  {
+   "scene": "title",
+   "text": "239 personnes à bord.",
+   "from": 216,
+   "durationInFrames": 49
+  },
+  {
+   "scene": "title",
+   "text": "On ne l'a jamais retrouvé.",
+   "from": 268,
+   "durationInFrames": 32
+  },
+  {
+   "scene": "transponder",
+   "text": "Un radar de contrôle ne voit pas vraiment les avions.",
+   "from": 313,
+   "durationInFrames": 73
+  },
+  {
+   "scene": "transponder",
+   "text": "Il les interroge,",
+   "from": 390,
+   "durationInFrames": 29
+  },
+  {
+   "scene": "transponder",
+   "text": "et l'avion répond, grâce à son transpondeur.",
+   "from": 422,
+   "durationInFrames": 63
+  },
+  {
+   "scene": "goodnight",
+   "text": "À 1 h 19, le pilote salue :",
+   "from": 495,
+   "durationInFrames": 48
+  },
+  {
+   "scene": "goodnight",
+   "text": "« Bonne nuit, Malaysian trois sept zéro. »",
+   "from": 547,
+   "durationInFrames": 53
+  },
+  {
+   "scene": "goodnight",
+   "text": "Deux minutes plus tard, le transpondeur se tait.",
+   "from": 615,
+   "durationInFrames": 65
+  },
+  {
+   "scene": "military",
+   "text": "Le radar militaire capte encore son écho.",
+   "from": 690,
+   "durationInFrames": 58
+  },
+  {
+   "scene": "military",
+   "text": "L'avion fait demi-tour, traverse la Malaisie…",
+   "from": 752,
+   "durationInFrames": 61
+  },
+  {
+   "scene": "military",
+   "text": "…puis s'efface, à 2 h 22.",
+   "from": 816,
+   "durationInFrames": 45
+  },
+  {
+   "scene": "curvature",
+   "text": "Car loin des côtes, la Terre est ronde :",
+   "from": 874,
+   "durationInFrames": 49
+  },
+  {
+   "scene": "curvature",
+   "text": "les radars ne voient plus rien au-dessus des océans.",
+   "from": 926,
+   "durationInFrames": 65
+  },
+  {
+   "scene": "satellite",
+   "text": "Dernier témoin : un satellite.",
+   "from": 1001,
+   "durationInFrames": 41
+  },
+  {
+   "scene": "satellite",
+   "text": "Ses signaux donnent une distance, pas une position.",
+   "from": 1045,
+   "durationInFrames": 65
+  },
+  {
+   "scene": "satellite",
+   "text": "Juste un arc, à travers l'océan Indien.",
+   "from": 1114,
+   "durationInFrames": 62
+  },
+  {
+   "scene": "search",
+   "text": "120 000 km² de fonds marins fouillés.",
+   "from": 1185,
+   "durationInFrames": 67
+  },
+  {
+   "scene": "search",
+   "text": "On ne retrouve que des débris,",
+   "from": 1256,
+   "durationInFrames": 38
+  },
+  {
+   "scene": "search",
+   "text": "dont un morceau d'aile, échoué à La Réunion.",
+   "from": 1297,
+   "durationInFrames": 59
+  },
+  {
+   "scene": "rule",
+   "text": "Depuis, au-dessus des océans,",
+   "from": 1367,
+   "durationInFrames": 40
+  },
+  {
+   "scene": "rule",
+   "text": "les avions de ligne doivent signaler leur position au moins toutes les 15 minutes.",
+   "from": 1411,
+   "durationInFrames": 112
+  },
+  {
+   "scene": "end",
+   "text": "En 2026, une nouvelle recherche a échoué.",
+   "from": 1532,
+   "durationInFrames": 73
+  },
+  {
+   "scene": "end",
+   "text": "Un avion ne disparaît pas.",
+   "from": 1609,
+   "durationInFrames": 35
+  },
+  {
+   "scene": "end",
+   "text": "Il sort de ce que nos radars savent voir.",
+   "from": 1648,
+   "durationInFrames": 54
+  }
+ ]
+}
