@@ -5,7 +5,7 @@
 set -euo pipefail
 ffmpeg -y -loglevel error -i "$1" -i public/audio/mix.wav \
   -map 0:v:0 -map 1:a:0 \
-  -vf "noise=c0s=9:c0f=t+u" \
-  -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -profile:v high -r 30 -movflags +faststart \
+  -vf "noise=c0s=6:c0f=t+u" \
+  -c:v libx264 -preset slow -crf 20 -maxrate 14M -bufsize 28M -tune grain -pix_fmt yuv420p -profile:v high -r 30 -movflags +faststart \
   -c:a aac -b:a 256k -ar 48000 -shortest \
   "$2"
