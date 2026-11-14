@@ -111,7 +111,7 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
         if sum(s["section"] == "conclusion" for s in scenes) < 2:
             add(0, "bloquant", "coherence", "pas de scène de dénouement avant la question finale", "ajouter une scène conclusion qui dit ce qu'il est advenu ensuite")
     people = r"(?i)\b(player|man|men|woman|goalkeeper|referee|coach|crowd|fans?|supporters?|spectators?|boy|child|children|silhouette|figure|people|team|captain|president|journalist)\b"
-    generic = [s["id"] for s in scenes if s["type"] == "image" and re.search(r"(?i)\b(ball|stadium|trophy|pitch|net)\b", s.get("image_prompt", "")) and not re.search(people, s.get("image_prompt", ""))]
+    generic = [s["id"] for s in scenes if s["type"] == "image" and re.search(r"(?i)\b(ball|stadium|trophy|pitch|net)\b", " ".join(s.get("image_prompt", "").split()[:12])) and not re.search(people, s.get("image_prompt", ""))]
     if len(generic) > 2:
         add(0, "bloquant", "visuel", f"trop d'images génériques sans personnage (scènes {generic})", "remplacer par des visuels propres à l'histoire : personnage de dos, foule, lieu précis")
     order = [SECTIONS.index(s["section"]) for s in scenes]
@@ -143,7 +143,7 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
         if bad:
             add(s["id"], "bloquant", "fait", f"faits inconnus de la fiche : {bad}", "n'utiliser que des faits de la fiche")
         unc = [f for f in s["facts"] if f in uncertain]
-        if unc and not re.search(r"(?i)\b(aurait|auraient|serait|seraient|selon|dit-on|raconte|légende|paraît|rumeur|peut-être)\b", s["narration"]):
+        if unc and not re.search(r"(?i)\b(aurait|auraient|serait|seraient|selon|dit-on|raconte|légende|paraît|rumeur|peut-être|ignore|sait|saura|versions?|disputée?s?|mystère|prétend|affirme|assure|officiellement|incertain|doute|certains|d'autres)\b", s["narration"]):
             add(s["id"], "bloquant", "fait", f"fait incertain {unc} présenté comme certain", "le retirer ou le formuler au conditionnel")
         ip = s.get("image_prompt", "")
         if len(ip.split()) < 15:
@@ -165,7 +165,8 @@ def write_script(cfg: dict, llm: LLM, dossier: dict, workdir: Path) -> dict:
     sc = cfg["script"]
     facts = facts_block(dossier)
     topic = dossier["topic"]
-    script = normalize(
+    draft = workdir / "script_draft.json"
+    script = normalize(json.loads(draft.read_text(encoding="utf-8"))) if draft.exists() else normalize(
         llm.json(
             prompt("script", topic=topic["title"], angle=topic.get("angle", ""), facts=facts, min_words=sc["min_words"], max_words=sc["max_words"]),
             system=system_prompt(),
@@ -173,6 +174,7 @@ def write_script(cfg: dict, llm: LLM, dossier: dict, workdir: Path) -> dict:
     )
     report = []
     for cycle in range(1, sc["max_revisions"] + 1):
+        draft.write_text(_dump(script), encoding="utf-8")
         auto = auto_check(script, cfg, dossier)
         review = llm.json(
             prompt("critique", facts=facts, script=_dump(script), auto_issues=json.dumps(auto, ensure_ascii=False, indent=1) if auto else "aucun problème détecté"),

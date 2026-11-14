@@ -34,7 +34,7 @@ news_check = true          # titres Google Actualités pour dater les sujets ré
 [script]
 min_words = 145
 max_words = 168
-max_revisions = 3          # cycles d'auto-critique du script
+max_revisions = 4          # cycles d'auto-critique du script
 
 [images]
 # "auto" : openai (si OPENAI_API_KEY et images.allow_paid) sinon pollinations, sinon procedural.
