@@ -325,7 +325,7 @@ def mix_all(cfg: dict, voice: dict, timeline: list[dict], marks: dict, duration:
     sfx = make_sfx(duration, timeline, marks)
     gain = duck_gain(vo, ac["ducking"])
     mix = vo + music * gain[:, None] * ac["music_volume"] * music_gain + sfx * (0.6 + 0.4 * gain[:, None]) * ac["sfx_volume"]
-    fade = int(0.6 * SR)
+    fade = int(1.1 * SR)
     mix[-fade:] *= np.linspace(1, 0, fade)[:, None] ** 1.5
     mix = np.tanh(mix * 1.1) / 1.1  # limiteur doux
     raw = out.with_suffix(".premix.wav")

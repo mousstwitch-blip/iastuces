@@ -16,12 +16,18 @@ STRUCTURE NARRATIVE (durées indicatives)
 - contexte (3-15 s) : qui, où, quand.
 - developpement (15-40 s) : révélations progressives, chaque scène relance la curiosité.
 - rebondissement (40-53 s) : le moment le plus surprenant ou émouvant.
-- conclusion (53-60 s) : chute mémorable + UNE question ouverte qui appelle les commentaires (dernière phrase, terminée par « ? »).
+- conclusion (53-60 s) : DEUX scènes. D'abord le DÉNOUEMENT : ce qu'il est advenu ensuite (conséquences, destin des protagonistes, trace laissée) — l'histoire doit être bouclée. Puis une scène finale qui ne contient QUE la question ouverte (12 mots maximum, terminée par « ? »), qui appelle les commentaires.
+
+DRAMATURGIE (impératif)
+- Le hook pose une énigme (« comment ? », « pourquoi ? ») ; la réponse n'arrive qu'au rebondissement. Ne révèle jamais plus tôt l'issue de l'histoire.
+- Progression de cause à effet : chaque scène découle de la précédente (« donc », « mais »), jamais une simple liste de faits.
+- Chaque information n'est donnée qu'une fois. Chaque phrase est limpide pour quelqu'un qui ne connaît rien au sujet : on sait toujours qui fait quoi à qui.
+- La tension monte jusqu'au rebondissement, puis le dénouement apporte la résolution.
 
 STYLE
 - Narration orale, naturelle, au présent de narration de préférence. Phrases courtes (20 mots maximum). Aucun temps mort, aucune répétition.
 - Total : entre {{min_words}} et {{max_words}} mots (≈ 60 s à voix haute). C'est impératif.
-- 10 à 13 scènes de 3 à 7 secondes ; une idée par scène.
+- 11 à 13 scènes ; une idée par scène ; 18 mots maximum par scène (≈ 6 s).
 - Écris les nombres comme on veut les entendre (« 1958 » convient, « 2-1 » s'écrit « deux buts à un »).
 
 VISUELS (un par scène, précisément lié à ce qui est dit)
@@ -30,14 +36,16 @@ VISUELS (un par scène, précisément lié à ce qui est dit)
 - `image_prompt` : EN ANGLAIS, 35 à 60 mots, description photographique concrète : sujet, action, décor, époque, cadrage, lumière, ambiance. Requis pour tous les types (il sert de fond aux scènes stat).
   * Écris « soccer » (jamais « football » seul) pour éviter le football américain.
   * N'utilise AUCUN nom de personne réelle, de club ou de marque : décris un joueur anonyme vu de dos, en silhouette, de loin ou en gros plan sur un détail (crampons, mains, maillot uni de la bonne couleur). Pas de visage reconnaissable, pas de logo, pas de texte dans l'image.
-  * Le générateur d'images rate les groupes de joueurs, les mains, les gestes d'arbitre et les numéros de maillot : privilégie UN sujet simple par image — objet symbolique en gros plan (ballon, sifflet, crampons, trophée, filets, banc, vestiaire vide), stade, ou une silhouette unique de dos. Maillots unis sans numéro.
+  * SPÉCIFIQUE AU SUJET : chaque image doit être reconnaissable comme appartenant à CETTE histoire. Chaque prompt précise le pays ou la ville (architecture, végétation, lumière, climat), l'époque (tenues, matériel, voitures, grain photo), les couleurs réelles des maillots, et un élément propre à la scène racontée (le lieu exact, l'objet, la situation).
+  * Au maximum DEUX images dont le sujet est seulement un ballon, un stade ou un trophée. Deux scènes consécutives n'ont jamais le même sujet ni le même cadrage (alterne plans larges, plans moyens, gros plans ; intérieurs et extérieurs ; personnes et lieux).
+  * Montre des humains en situation : un personnage unique vu de dos ou en silhouette, une foule vue de loin, des supporters de dos. Le générateur rate les groupes de joueurs en gros plan, les mains, les gestes précis et les numéros : évite-les. Maillots unis sans numéro.
   * Reste fidèle à l'époque (matériel, tenues, stades, photo noir et blanc si années 1930-1950).
 - `animation_prompt` : EN ANGLAIS, mouvement à donner à l'image si un moteur vidéo est disponible.
 - `camera` : push_in | pull_out | pan_left | pan_right | tilt_up | tilt_down | orbit
 - `lighting` : ambiance lumineuse en quelques mots (français).
 - `transition` (vers la scène suivante) : cut | fade | flash | whip | zoom | glitch
 - `keywords` : 1 à 3 mots de la narration à mettre en évidence dans les sous-titres (repris tels quels).
-- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots. La DERNIÈRE scène a un overlay dont `sub` reprend la question finale en 6 mots maximum (affiché en grand au centre).
+- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots. La DERNIÈRE scène a un overlay dont `text` est la question finale résumée en 2 à 6 mots avec son « ? » (affichée en grand au centre), sans `sub`. Un overlay ou un mot-clé n'affirme jamais seul ce que la narration nuance (accusation, soupçon).
 - `stat` (type stat) : {"value": nombre, "prefix": "", "suffix": "", "label": "légende courte", "year": false} — valeur exacte issue de la fiche ; "year": true si la valeur est une année. Le suffixe est court (« M€ », « buts », « ans », « % »).
 - `map` (type map) : {"points": [{"name": "Ville", "lat": 0.0, "lon": 0.0}], "route": true|false} — 1 ou 2 points ; route=true trace un trajet du premier au second.
 

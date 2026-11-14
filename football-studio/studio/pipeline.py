@@ -71,7 +71,7 @@ def build_timeline(cfg: dict, script: dict, voice: dict, proj: Project) -> dict:
     for i, s in enumerate(script["scenes"]):
         v = by_id[s["id"]]
         vo_start = cursor + (0.10 if i == 0 else gap / 2)
-        end = vo_start + v["duration"] + (0.95 if i == n - 1 else gap / 2)
+        end = vo_start + v["duration"] + (1.7 if i == n - 1 else gap / 2)
         minimum = {"stat": 3.2, "map": 3.8 if (s.get("map") or {}).get("route") else 3.2}.get(s["type"], 1.6)
         end = max(end, cursor + minimum)
         depth = proj.images / f"scene_{s['id']:02d}_depth.png"
@@ -85,6 +85,19 @@ def build_timeline(cfg: dict, script: dict, voice: dict, proj: Project) -> dict:
             words.append({"text": w["text"], "start": round(vo_start + w["start"], 3), "end": round(vo_start + w["end"], 3), "scene": s["id"], "keyword": render._norm(w["text"]) in kw})
         cursor = end
     duration = round(cursor, 3)
+    # transitions choisies selon la dramaturgie (et jamais deux fois la même de suite)
+    cycles = {"contexte": ["whip", "fade"], "developpement": ["whip", "zoom", "cut"], "rebondissement": ["flash", "zoom"], "conclusion": ["fade"]}
+    for i, sc in enumerate(scenes[:-1]):
+        nxt = scenes[i + 1]["section"]
+        if sc["section"] == "hook":
+            sc["transition"] = "flash"
+        elif nxt == "rebondissement" and sc["section"] != "rebondissement":
+            sc["transition"] = "glitch"
+        elif nxt == "conclusion":
+            sc["transition"] = "fade"
+        else:
+            c = cycles.get(sc["section"], ["fade"])
+            sc["transition"] = c[i % len(c)]
     marks = {}
     for sec, frac in (("contexte", 0.06), ("developpement", 0.25), ("rebondissement", 0.68), ("conclusion", 0.88)):
         first = next((sc["start"] for sc in scenes if sc["section"] == sec), None)
@@ -160,7 +173,7 @@ def plan_fixes(report: dict, script: dict | None = None) -> dict:
             plan["captions"] = True
         elif typ == "duree":
             plan["retime"] = True
-        elif typ == "format":
+        elif typ in ("format", "sync"):
             plan["rerender"] = True
         else:
             plan["unfixable"].append(i)

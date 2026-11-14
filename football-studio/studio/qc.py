@@ -85,7 +85,7 @@ def control_times(timeline: dict, count: int) -> list[float]:
     times = [0.05, 1.0]
     for sc in timeline["scenes"]:
         times.append((sc["start"] + sc["end"]) / 2)
-    times.append(timeline["duration"] - 0.5)
+    times.append(timeline["duration"] - 1.0)
     times = sorted(set(round(t, 2) for t in times))
     while len(times) > max(count, len(timeline["scenes"]) + 2):
         times.pop(len(times) // 2)
@@ -134,6 +134,17 @@ def inspect(video: Path, timeline: dict, cfg: dict, workdir: Path, mix_stats: di
     if not vc["min_duration"] <= info["duration"] <= vc["max_duration"]:
         add("duree", "bloquant", f"durée {info['duration']:.1f} s hors de la plage {vc['min_duration']:.0f}-{vc['max_duration']:.0f} s")
 
+    # chaque phrase doit se terminer avant la fin de sa scène, et la dernière avant la fin de la vidéo
+    for sc in timeline["scenes"]:
+        ws = [w for w in timeline["words"] if w["scene"] == sc["id"]]
+        if not ws:
+            add("sync", "bloquant", f"scène {sc['id']} sans narration horodatée", sc["id"], sc["start"])
+        elif ws[-1]["end"] > sc["end"] + 0.05:
+            add("sync", "bloquant", f"la phrase de la scène {sc['id']} déborde de {ws[-1]['end'] - sc['end']:.2f} s", sc["id"], sc["end"])
+    tail = info["duration"] - timeline["words"][-1]["end"]
+    if tail < 1.0:
+        add("sync", "bloquant", f"la vidéo s'arrête {tail:.2f} s après le dernier mot (fin tronquée)", timeline["scenes"][-1]["id"], info["duration"])
+
     an = _analyse(video)
     if not an["decodes"] or an["decode_errors"]:
         add("format", "bloquant", "erreurs de décodage : " + "; ".join(an["decode_errors"])[:200])
@@ -171,14 +182,14 @@ def inspect(video: Path, timeline: dict, cfg: dict, workdir: Path, mix_stats: di
 
     # sous-titres : présence vérifiée au milieu de chaque groupe (échantillon)
     groups = caption_groups(prepare_words(timeline), int(cfg["captions"]["max_words"]))
-    sample = groups[:: max(1, len(groups) // 10)]
+    sample = groups  # chaque groupe de sous-titres est vérifié dans le MP4
     missing = []
     for g in sample:
         t = (g["start"] + g["end"]) / 2
         fr = grab(video, t)
         if fr is not None and not caption_visible(fr, cfg):
             missing.append(round(t, 2))
-    if len(missing) > max(1, len(sample) // 4):
+    if len(missing) > max(1, len(sample) // 20):
         add("sous_titres", "bloquant", f"sous-titres non détectés à {missing}")
 
     sheet = contact_sheet(frames, workdir / f"planche_contact_{tag}.jpg") if frames else None

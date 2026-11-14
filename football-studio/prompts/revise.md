@@ -9,6 +9,6 @@ SCRIPT ACTUEL :
 REMARQUES À TRAITER :
 {{issues}}
 
-Contraintes inchangées : {{min_words}} à {{max_words}} mots de narration au total, hook ≤ 12 mots, dernière phrase = question, 10 à 13 scènes, image_prompt en anglais sans nom de personne réelle, de club ni de marque.
+Contraintes inchangées : {{min_words}} à {{max_words}} mots de narration au total, hook ≤ 12 mots, 11 à 13 scènes de 18 mots maximum, avant-dernière scène = dénouement, dernière scène = uniquement la question (≤ 12 mots), image_prompt en anglais sans nom de personne réelle, de club ni de marque.
 
 Renvoie le script COMPLET corrigé, exactement dans le même format JSON.

@@ -32,8 +32,8 @@ web_search = true          # recherche web complémentaire (uniquement avec clau
 news_check = true          # titres Google Actualités pour dater les sujets récents
 
 [script]
-min_words = 150
-max_words = 185
+min_words = 145
+max_words = 168
 max_revisions = 3          # cycles d'auto-critique du script
 
 [images]

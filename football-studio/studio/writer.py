@@ -15,7 +15,7 @@ SECTIONS = ["hook", "contexte", "developpement", "rebondissement", "conclusion"]
 CAMERAS = ["push_in", "pull_out", "pan_left", "pan_right", "tilt_up", "tilt_down", "orbit"]
 TRANSITIONS = ["cut", "fade", "flash", "whip", "zoom", "glitch"]
 MOODS = ["epic", "dark", "nostalgic", "tension"]
-WORDS_PER_SECOND = 2.85  # débit mesuré de la voix à +10 %
+WORDS_PER_SECOND = 2.75  # débit mesuré de la voix à +10 %
 
 
 def words(text: str) -> list[str]:
@@ -102,6 +102,18 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
             add(1, "mineur", "visuel", "pas d'overlay sur le hook", "ajouter un overlay percutant de 2 à 5 mots")
         if not scenes[-1]["narration"].rstrip(" »\"").endswith("?"):
             add(len(scenes), "bloquant", "rythme", "la conclusion ne se termine pas par une question", "terminer par une question ouverte qui appelle les commentaires")
+    if scenes:
+        last = scenes[-1]
+        if len(words(last["narration"])) > 14 or len(re.findall(r"[.!?…]+", last["narration"])) > 1:
+            add(last["id"], "bloquant", "rythme", "la scène finale ne doit contenir que la question (12 mots maximum)", "déplacer le reste dans la scène de dénouement qui précède")
+        if not last.get("overlay"):
+            add(last["id"], "bloquant", "visuel", "pas d'overlay sur la scène finale", "overlay.text = la question résumée en 2 à 6 mots")
+        if sum(s["section"] == "conclusion" for s in scenes) < 2:
+            add(0, "bloquant", "coherence", "pas de scène de dénouement avant la question finale", "ajouter une scène conclusion qui dit ce qu'il est advenu ensuite")
+    people = r"(?i)\b(player|man|men|woman|goalkeeper|referee|coach|crowd|fans?|supporters?|spectators?|boy|child|children|silhouette|figure|people|team|captain|president|journalist)\b"
+    generic = [s["id"] for s in scenes if s["type"] == "image" and re.search(r"(?i)\b(ball|stadium|trophy|pitch|net)\b", s.get("image_prompt", "")) and not re.search(people, s.get("image_prompt", ""))]
+    if len(generic) > 2:
+        add(0, "bloquant", "visuel", f"trop d'images génériques sans personnage (scènes {generic})", "remplacer par des visuels propres à l'histoire : personnage de dos, foule, lieu précis")
     order = [SECTIONS.index(s["section"]) for s in scenes]
     if order != sorted(order):
         add(0, "mineur", "coherence", "sections dans le désordre", "respecter hook → contexte → developpement → rebondissement → conclusion")
@@ -116,8 +128,8 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
     seen_sentences: set[str] = set()
     for s in scenes:
         nw = len(words(s["narration"]))
-        if nw > 30:
-            add(s["id"], "mineur", "rythme", f"scène de {nw} mots", "scinder ou raccourcir (une idée par scène)")
+        if nw > 20:
+            add(s["id"], "bloquant", "rythme", f"scène de {nw} mots (18 maximum)", "scinder en deux scènes ou raccourcir")
         for sent in re.split(r"(?<=[.!?…])\s+", s["narration"]):
             if len(words(sent)) > 24:
                 add(s["id"], "mineur", "rythme", f"phrase trop longue : « {sent[:60]}… »", "couper en deux phrases")

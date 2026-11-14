@@ -267,6 +267,10 @@ class Renderer:
         p = clamp((t + self.T) / (dur + 2 * self.T))
         s, ox, oy, px, py, zr = self.camera(sc["camera"], p)
         s = 1 + (s - 1) * strength
+        if dur > 4.5:  # relance visuelle : recadrage d'impact à mi-plan
+            punch = ease_out((t - dur * 0.5) / 0.22, 4)
+            s *= 1 + 0.09 * punch
+            oy -= 0.02 * self.H * punch
         W, H = self.W, self.H
         if depth is None:
             M = np.float32([[1 / s, 0, W / 2 - W / (2 * s) + ox], [0, 1 / s, H / 2 - H / (2 * s) + oy]])
@@ -622,8 +626,8 @@ class Renderer:
             mark = self.sprite("mark", lambda: text_sprite([[(self.cfg["video"]["channel_name"], (255, 255, 255))]], "montserrat-800.ttf", 34, stroke=2, shadow=4))
             blit(frame, mark, self.W / 2, 190, 0.7)
         self.draw_captions(frame, t)
-        if t > self.duration - 0.35:  # fondu de sortie léger (jamais jusqu'au noir complet)
-            frame = cv2.convertScaleAbs(frame, alpha=0.55 + 0.45 * clamp((self.duration - t) / 0.35))
+        if t > self.duration - 0.5:  # fondu de sortie complet, après la fin de la narration
+            frame = cv2.convertScaleAbs(frame, alpha=smooth((self.duration - t) / 0.5))
         return frame
 
 

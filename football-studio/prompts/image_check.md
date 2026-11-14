@@ -12,4 +12,4 @@ Sois pragmatique : une image d'ambiance correcte est acceptable ; ne rejette que
 Format JSON :
 {"images": [{"scene": 1, "ok": true, "score": 0-10, "problem": "", "new_prompt": "si rejetée : NOUVEAU prompt complet EN ANGLAIS (35-60 mots)"}]}
 
-`new_prompt` : le générateur gratuit échoue sur les groupes de personnes, les mains, les gestes et les maillots floqués. Propose donc un concept PLUS SIMPLE qui dit la même chose : un seul sujet, de préférence un objet symbolique (ballon sur le point de penalty, sifflet dans l'herbe, banc vide, trophée, filets, vestiaire vide) ou une silhouette unique de dos, dans un décor de stade. Écris « soccer », aucun nom réel, aucun texte.
+`new_prompt` : le générateur gratuit échoue sur les groupes de personnes, les mains, les gestes et les maillots floqués. Propose donc un concept plus simple à dessiner MAIS toujours propre à cette histoire : un personnage unique de dos ou en silhouette, une foule lointaine, un lieu ou un objet précis de la scène racontée, en gardant le pays, l'époque et les couleurs indiqués dans le prompt d'origine. Évite le ballon ou le stade seul. Écris « soccer », aucun nom réel, aucun texte.
