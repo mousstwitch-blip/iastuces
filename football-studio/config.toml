@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────────────────────
+#  FOOTBALL STUDIO — configuration centrale
+#  Les clés API ne vont JAMAIS ici : elles vont dans le fichier .env
+# ─────────────────────────────────────────────────────────────
+
+[video]
+width = 1080
+height = 1920
+fps = 30
+min_duration = 55.0        # secondes
+max_duration = 65.0
+target_duration = 60.0
+crf = 21                   # qualité x264 (plus bas = meilleur)
+channel_name = ""          # ex. "@monfoot" : petit filigrane en haut de l'image (vide = aucun)
+
+[llm]
+# "auto" choisit dans l'ordre : claude_cli (si la commande `claude` existe),
+# anthropic (si ANTHROPIC_API_KEY), openai (si OPENAI_API_KEY), pollinations (gratuit, sans clé).
+provider = "auto"
+anthropic_model = "claude-sonnet-5-5"
+openai_model = "gpt-4o-mini"
+openai_base_url = "https://api.openai.com/v1"   # tout service compatible OpenAI
+pollinations_model = "openai"
+claude_cli_model = ""      # vide = modèle par défaut de Claude Code
+timeout = 420
+
+[research]
+languages = ["fr", "en"]   # Wikipédia : deux éditions indépendantes sont croisées
+max_pages = 5
+max_chars_per_page = 14000
+web_search = true          # recherche web complémentaire (uniquement avec claude_cli)
+news_check = true          # titres Google Actualités pour dater les sujets récents
+
+[script]
+min_words = 150
+max_words = 185
+max_revisions = 3          # cycles d'auto-critique du script
+
+[images]
+# "auto" : openai (si OPENAI_API_KEY et images.allow_paid) sinon pollinations, sinon procedural.
+provider = "auto"
+allow_paid = false
+pollinations_model = "flux"
+openai_model = "gpt-image-1"
+max_attempts = 3           # régénérations par scène en cas de défaut
+vision_check = true        # contrôle visuel par IA (claude_cli / anthropic uniquement)
+style_suffix = "photorealistic cinematic still, sports documentary, dramatic volumetric lighting, shallow depth of field, 35mm film look, ultra detailed, vertical composition, no text, no watermark, no logo"
+
+[tts]
+provider = "auto"          # edge (gratuit) ; piper (hors-ligne) en secours
+edge_voice = "fr-FR-HenriNeural"
+edge_rate = "+10%"
+edge_pitch = "-2Hz"
+piper_voice = "fr_FR-tom-medium"
+gap = 0.18                 # silence entre deux scènes (s)
+
+[audio]
+music_volume = 0.75
+sfx_volume = 0.8
+ducking = 0.38             # niveau de la musique quand la voix parle (0-1)
+target_lufs = -14.0
+
+[captions]
+font = "montserrat-900.ttf"
+size = 86
+max_words = 3
+y_ratio = 0.70             # position verticale du bloc (0 = haut, 1 = bas)
+color = "#FFFFFF"
+active_color = "#FFD60A"
+keyword_color = "#31E981"
+
+[render]
+depth_parallax = true      # parallaxe 3D via carte de profondeur (télécharge un modèle de 99 Mo)
+transition = 0.45          # durée des transitions (s)
+grain = 0.035
+workers = 0                # 0 = nombre de cœurs
+
+[qc]
+max_correction_cycles = 3
+control_frames = 12
+vision_check = true

@@ -1,0 +1,9 @@
+numpy>=2.0
+scipy>=1.13
+pillow>=10.0
+opencv-python-headless>=4.9
+requests>=2.31
+edge-tts>=7.2
+onnxruntime>=1.18      # parallaxe 3D (facultatif : sans lui, mouvements de caméra simples)
+# piper-tts            # voix hors-ligne de secours (facultatif)
+# fonttools, brotli    # seulement pour scripts/fetch_assets.py
