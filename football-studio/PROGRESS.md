@@ -4,15 +4,17 @@
 - Code complet du studio (voir README.md), commité et poussé.
 - Test court bout-en-bout (4 scènes) : voix, images, mixage, rendu, inspection OK.
 
-## État au moment de la pause (demandée par l'utilisateur)
-Projet `projects/20261114-149-0-le-match-ou-une-equipe-a-marque-contre-son/` :
-- fait : sujet, research.json + sources.md (28 faits, 11 sources), script.json validé (13 scènes, 181 mots, 88/100).
-- interrompu à : voix off → 67,9 s, trop long ; il faut retirer ~22 mots (correction automatique à la reprise).
-- pas encore fait : images IA, mixage, rendu, inspection du MP4.
+## Première vidéo terminée
+`videos/20261114-149-0-le-match-ou-une-equipe-a-marque-contre-son.mp4` — 1080×1920, 30 i/s, 61,2 s, −14,1 LUFS, 29 Mo.
+Inspection mesurée : aucun problème. Planche-contact relue : `projects/<projet>/planche_contact_manual.jpg`.
 
-## Prochaine étape (sur ordre)
-`python main.py --resume 20261114-149-0-le-match-ou-une-equipe-a-marque-contre-son`
-puis regarder planche-contact + qc_report.json, corriger les vrais défauts seulement.
+## Défauts connus à traiter (par ordre d'intérêt)
+1. Images IA faibles sur les scènes 3, 4, 6, 8, 11 (Pollinations gratuit) : joueurs à l'allure de rugbymen, flocage illisible, scène 11 peu lisible.
+2. Boucle de correction : un défaut de texte (glyphe manquant) a été traité comme un défaut d'image → régénérations inutiles. Corrigé à la source (caractères filtrés), mais le tri des problèmes reste à affiner.
+3. Sous-titre sur deux lignes trop proche du bandeau du titre pendant le hook.
+4. Sous-titres d'incrustation rouges (couleur d'accent) petits et peu contrastés.
+5. Plan final statique (7 s) ; la question finale mériterait un grand texte.
 
-## Reprise après interruption
-`python main.py --resume <dossier de projects/>` réutilise recherche, script et images existants.
+## Outils
+- `python main.py --resume <projet>` : reprise complète (appelle l'IA).
+- `python scripts/rerender.py <projet>` : refait seulement montage + inspection (aucun appel IA, ~3 min).

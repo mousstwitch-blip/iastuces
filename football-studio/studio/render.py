@@ -60,7 +60,11 @@ def font(name: str, size: int) -> ImageFont.FreeTypeFont:
 def text_sprite(lines: list[list[tuple[str, tuple]]], font_name: str, size: int, stroke: int = 0, shadow: int = 0,
                 line_gap: float = 0.12, align: str = "center", scales: dict | None = None) -> np.ndarray:
     """Rend un bloc de texte en RGBA. `lines` = lignes de segments (texte, couleur RGB)."""
-    lines = [[(t.replace("\u202f", " ").replace("\u00a0", " "), c) for t, c in ln] for ln in lines]  # espaces fines absentes des polices
+    def safe(t: str) -> str:  # caractères absents des polices (espaces fines, ≈, emojis…)
+        t = t.replace("\u202f", " ").replace("\u00a0", " ").replace("≈", "~").replace("×", "x")
+        return "".join(ch for ch in t if ord(ch) < 0x250 or ch in "’‘“”…–—€")
+
+    lines = [[(safe(t), c) for t, c in ln] for ln in lines]
     f = font(font_name, size)
     asc, desc = f.getmetrics()
     lh = int((asc + desc) * (1 + line_gap))
@@ -231,7 +235,7 @@ class Renderer:
             blurred = None
             if sc["type"] == "stat":
                 small = cv2.GaussianBlur(cv2.resize(img, (self.W // 4, self.H // 4)), (0, 0), 5)
-                blurred = (cv2.resize(small, (self.W, self.H), interpolation=cv2.INTER_CUBIC) * 0.62).astype(np.uint8)
+                blurred = (cv2.resize(small, (self.W, self.H), interpolation=cv2.INTER_CUBIC) * 0.8).astype(np.uint8)
             self._img[sc["id"]] = (img, depth, blurred)
             if len(self._img) > 4:  # mémoire bornée
                 del self._img[next(iter(self._img))]
@@ -337,6 +341,7 @@ class Renderer:
         decimals = 0 if abs(target - round(target)) < 1e-6 else 1
         is_year = bool(st.get("year")) and decimals == 0
         fmt = (lambda v: str(int(round(v)))) if is_year else (lambda v: fr_number(v, decimals))
+        st = dict(st, prefix=str(st.get("prefix", "")).upper(), suffix=str(st.get("suffix", "")).upper())
         final_txt = f"{st.get('prefix', '')}{fmt(target)}{st.get('suffix', '')}"
         _, size = fit_text(final_txt.replace(" ", " "), "anton-400.ttf", 400, self.W - 140, 1, 120)
         val = target * k if not is_year else target - (1 - k) * 60
