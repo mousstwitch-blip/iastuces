@@ -245,7 +245,11 @@ def produce_images(cfg: dict, llm: LLM | None, script: dict, img_dir: Path, work
                     continue
                 report[str(s["id"])]["vision"] = rv
                 if not rv.get("ok", True):
-                    retry[s["id"]] = str(rv.get("prompt_fix", ""))
+                    retry[s["id"]] = ""
+                    if len(str(rv.get("new_prompt", "")).split()) >= 15:  # concept plus simple proposé par le contrôle
+                        s["image_prompt"] = str(rv["new_prompt"])
+                    else:
+                        retry[s["id"]] = str(rv.get("prompt_fix", ""))
                     log.info("  scène %2d : rejetée par le contrôle visuel (%s)", s["id"], rv.get("problem", ""))
         report_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
         todo = retry

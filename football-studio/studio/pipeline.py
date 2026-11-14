@@ -141,14 +141,16 @@ def step_images(cfg: dict, llm: LLM, script: dict, proj: Project, only: dict[int
 
 
 # ───────────────────────────── Corrections ─────────────────────────────
-def plan_fixes(report: dict) -> dict:
+def plan_fixes(report: dict, script: dict | None = None) -> dict:
     """Traduit les problèmes détectés en actions de correction ciblées."""
     plan = {"regen": {}, "remix": None, "captions": False, "retime": False, "rerender": False, "unfixable": []}
     for i in report["issues"]:
         if i["severity"] != "bloquant":
             continue
         typ, scene = i["type"], i.get("scene")
-        if typ in ("noir", "defaut_image", "incoherence", "fige") and scene:
+        kinds = {s["id"]: s["type"] for s in (script or {}).get("scenes", [])}
+        texte = any(w in i["detail"].lower() for w in ("glyphe", "caractère", "police", "emoji", "texte", "titre", "sous-titre"))
+        if typ in ("noir", "defaut_image", "incoherence", "fige") and scene and kinds.get(int(scene), "image") == "image" and not texte:
             plan["regen"][int(scene)] = "clear well-lit subject, coherent anatomy, correct soccer scene" if typ != "noir" else "bright, well exposed, clearly lit scene"
         elif typ == "voix_couverte":
             plan["remix"] = 0.7
@@ -219,7 +221,7 @@ def run(cfg: dict, topic: str | None = None, category: str | None = None, resume
         if cycle == max_cycles:
             log.warning("   limite de %d cycles de correction atteinte", max_cycles)
             break
-        plan = plan_fixes(report)
+        plan = plan_fixes(report, script)
         report["fix_plan"] = {k: v for k, v in plan.items() if v}
         _save(proj.dir / "qc_report.json", history)
         if not any([plan["regen"], plan["remix"], plan["captions"], plan["retime"], plan["rerender"]]):

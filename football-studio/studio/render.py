@@ -289,13 +289,18 @@ class Renderer:
         out = 1 - smooth((t - (dur - 0.30)) / 0.25)
         if hook:
             def build():
-                lines, size = fit_text(ov["text"].upper(), "anton-400.ttf", 190, self.W - 150, 3, 90)
+                size = 190
+                while True:  # le bloc titre doit tenir au-dessus de la zone des sous-titres
+                    lines, size = fit_text(ov["text"].upper(), "anton-400.ttf", size, self.W - 150, 3, 90)
+                    if len(lines) * size * 1.12 <= 560 or size <= 90:
+                        break
+                    size = int(size * 0.92)
                 segs = [[(ln, (255, 255, 255) if i < len(lines) - 1 or len(lines) == 1 else self.accent)] for i, ln in enumerate(lines)]
                 return text_sprite(segs, "anton-400.ttf", size, stroke=6, shadow=14, line_gap=-0.13)
             sp = self.sprite(("hook", sc["id"]), build)
             a = ease_out((t + 0.05) / 0.22)
             scale = 1.22 - 0.22 * back_out((t + 0.05) / 0.30) + 0.02 * clamp(t / dur)
-            cy = 330 + sp.shape[0] / 2
+            cy = 250 + sp.shape[0] / 2
             blit(frame, sp, self.W / 2, cy, a * out, scale)
             bar_w = int((sp.shape[1] - 60) * ease_out((t - 0.15) / 0.4))
             if bar_w > 4 and out > 0.02:
@@ -303,8 +308,8 @@ class Renderer:
                 col = tuple(int(c * out + frame[y, self.W // 2, i] * (1 - out)) for i, c in enumerate(self.accent))
                 cv2.rectangle(frame, (self.W // 2 - bar_w // 2, y), (self.W // 2 + bar_w // 2, y + 10), col, -1)
             if ov.get("sub"):
-                sub = self.sprite(("hooksub", sc["id"]), lambda: text_sprite([[(ov["sub"].upper(), (235, 235, 235))]], "montserrat-800.ttf", 46, stroke=4, shadow=6))
-                blit(frame, sub, self.W / 2, cy + sp.shape[0] / 2 + 58, ease_out((t - 0.35) / 0.3) * out)
+                sub = self.sprite(("hooksub", sc["id"]), lambda: text_sprite([[(ln, (255, 255, 255))] for ln in fit_text(ov["sub"].upper(), "montserrat-800.ttf", 54, self.W - 160, 2, 36)[0]], "montserrat-800.ttf", fit_text(ov["sub"].upper(), "montserrat-800.ttf", 54, self.W - 160, 2, 36)[1], stroke=5, shadow=6))
+                blit(frame, sub, self.W / 2, cy + sp.shape[0] / 2 + 34 + sub.shape[0] / 2, ease_out((t - 0.35) / 0.3) * out)
             return
 
         def build():
@@ -312,8 +317,8 @@ class Renderer:
             title = text_sprite([[(ln, (255, 255, 255))] for ln in lines], "anton-400.ttf", size, stroke=3, shadow=8, line_gap=0.04, align="left")
             sub = None
             if ov.get("sub"):
-                sl, ss = fit_text(ov["sub"].upper(), "montserrat-800.ttf", 40, self.W - 260, 2, 28)
-                sub = text_sprite([[(ln, self.accent)] for ln in sl], "montserrat-800.ttf", ss, stroke=3, shadow=5, align="left")
+                sl, ss = fit_text(ov["sub"].upper(), "montserrat-800.ttf", 50, self.W - 260, 2, 34)
+                sub = text_sprite([[(ln, (255, 255, 255))] for ln in sl], "montserrat-800.ttf", ss, stroke=5, shadow=6, align="left")
             return title, sub
         title, sub = self.sprite(("chip", sc["id"]), build)
         k = ease_out((t - 0.25) / 0.4)
@@ -490,7 +495,7 @@ class Renderer:
                 leak = 0.20 * math.exp(-max(t, 0) * 7)
                 if leak > 0.01:
                     frame = cv2.addWeighted(frame, 1.0, np.full_like(frame, (255, 214, 170)), leak, 0)
-        self.draw_overlay(frame, sc, t, hook=idx == 0)
+        self.draw_overlay(frame, sc, t, hook=idx in (0, len(self.scenes) - 1))
         return frame
 
     def transition(self, kind: str, a: np.ndarray, b: np.ndarray, p: float, seed: int) -> np.ndarray:

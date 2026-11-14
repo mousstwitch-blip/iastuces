@@ -30,13 +30,14 @@ VISUELS (un par scène, précisément lié à ce qui est dit)
 - `image_prompt` : EN ANGLAIS, 35 à 60 mots, description photographique concrète : sujet, action, décor, époque, cadrage, lumière, ambiance. Requis pour tous les types (il sert de fond aux scènes stat).
   * Écris « soccer » (jamais « football » seul) pour éviter le football américain.
   * N'utilise AUCUN nom de personne réelle, de club ou de marque : décris un joueur anonyme vu de dos, en silhouette, de loin ou en gros plan sur un détail (crampons, mains, maillot uni de la bonne couleur). Pas de visage reconnaissable, pas de logo, pas de texte dans l'image.
+  * Le générateur d'images rate les groupes de joueurs, les mains, les gestes d'arbitre et les numéros de maillot : privilégie UN sujet simple par image — objet symbolique en gros plan (ballon, sifflet, crampons, trophée, filets, banc, vestiaire vide), stade, ou une silhouette unique de dos. Maillots unis sans numéro.
   * Reste fidèle à l'époque (matériel, tenues, stades, photo noir et blanc si années 1930-1950).
 - `animation_prompt` : EN ANGLAIS, mouvement à donner à l'image si un moteur vidéo est disponible.
 - `camera` : push_in | pull_out | pan_left | pan_right | tilt_up | tilt_down | orbit
 - `lighting` : ambiance lumineuse en quelques mots (français).
 - `transition` (vers la scène suivante) : cut | fade | flash | whip | zoom | glitch
 - `keywords` : 1 à 3 mots de la narration à mettre en évidence dans les sous-titres (repris tels quels).
-- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots.
+- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots. La DERNIÈRE scène a un overlay dont `sub` reprend la question finale en 6 mots maximum (affiché en grand au centre).
 - `stat` (type stat) : {"value": nombre, "prefix": "", "suffix": "", "label": "légende courte", "year": false} — valeur exacte issue de la fiche ; "year": true si la valeur est une année. Le suffixe est court (« M€ », « buts », « ans », « % »).
 - `map` (type map) : {"points": [{"name": "Ville", "lat": 0.0, "lon": 0.0}], "route": true|false} — 1 ou 2 points ; route=true trace un trajet du premier au second.
 

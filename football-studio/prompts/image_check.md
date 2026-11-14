@@ -10,4 +10,6 @@ Pour CHAQUE image, contrôle :
 Sois pragmatique : une image d'ambiance correcte est acceptable ; ne rejette que les vrais problèmes qu'un spectateur remarquerait.
 
 Format JSON :
-{"images": [{"scene": 1, "ok": true, "score": 0-10, "problem": "", "prompt_fix": "si rejetée : consigne EN ANGLAIS à ajouter au prompt pour corriger"}]}
+{"images": [{"scene": 1, "ok": true, "score": 0-10, "problem": "", "new_prompt": "si rejetée : NOUVEAU prompt complet EN ANGLAIS (35-60 mots)"}]}
+
+`new_prompt` : le générateur gratuit échoue sur les groupes de personnes, les mains, les gestes et les maillots floqués. Propose donc un concept PLUS SIMPLE qui dit la même chose : un seul sujet, de préférence un objet symbolique (ballon sur le point de penalty, sifflet dans l'herbe, banc vide, trophée, filets, vestiaire vide) ou une silhouette unique de dos, dans un décor de stade. Écris « soccer », aucun nom réel, aucun texte.
