@@ -330,7 +330,7 @@ class Renderer:
         if a <= 0.01:
             return
         x = 96 - (1 - k) * 60
-        y = 250
+        y = 1480 if sc.get("photo") else 250  # photo réelle : le bandeau ne doit pas masquer le visage
         total_h = title.shape[0] + (sub.shape[0] - 14 if sub is not None else 0)
         bar = frame[y + 10 : y + total_h - 10, 64:74]
         bar[:] = (bar * (1 - a) + np.array(self.accent) * a).astype(np.uint8)

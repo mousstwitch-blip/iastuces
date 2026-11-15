@@ -25,6 +25,7 @@ if "--regen" in sys.argv:
     (proj / "script.json").write_text(json.dumps(script, ensure_ascii=False, indent=1))
 # Emplacements photo : photos/<projet>/scene_XX.jpg|png|webp remplacent l'image IA de la scène
 user_dir = config.ROOT / "photos" / slug
+photos = set()
 if user_dir.exists():
     from PIL import Image
     from studio import images
@@ -38,7 +39,10 @@ if user_dir.exists():
         if images.depth_available():
             images.depth_map(dest, dest.with_name(f"scene_{sid:02d}_depth.png"))
         print(f"photo perso : scène {sid} <- {f.name}")
+        photos.add(sid)
 tl = json.loads((proj / "timeline.json").read_text())
+for sc in tl["scenes"]:
+    sc["photo"] = sc["id"] in photos
 video = render.render_video(tl, cfg, config.DIRS["audio"] / slug / "mix.wav", proj / "montage_manual.mp4", proj)
 rep = qc.inspect(video, tl, cfg, proj, None, None, "manual")
 final = config.DIRS["videos"] / f"{slug}.mp4"
