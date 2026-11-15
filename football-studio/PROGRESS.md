@@ -26,3 +26,9 @@ Inspection mesurée : aucun problème. Planche-contact relue : `projects/<projet
 Limite d'usage Claude atteinte (« 5-hour limit », reprise à 19 h UTC) pendant la relecture du script.
 Reprise : `python main.py --resume 20261114-il-appelle-un-club-en-se-faisant-passer-pour-geo` (recherche et brouillon conservés).
 Vidéo de référence actuelle : celle du match 149-0 (version corrigée).
+
+## Identité vocale (validée par l'utilisateur, à conserver pour toutes les vidéos)
+Narrateur masculin français de France, grave, légèrement rauque, documentaire cinématographique.
+Réglages dans `config.toml` [tts] : voix fr-FR-RemyMultilingualNeural, -4 %, -5 Hz, voice_color 0.35,
+ton par section [tts.prosody] (mystérieux → calme → intense → émotionnel → final marquant), pauses plus longues aux changements de section.
+Budget texte recalé : 125-145 mots (2,5 mots/s). Échantillon : assets/brand/echantillon_voix.mp3

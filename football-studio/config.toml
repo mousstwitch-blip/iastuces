@@ -32,8 +32,8 @@ web_search = true          # recherche web complémentaire (uniquement avec clau
 news_check = true          # titres Google Actualités pour dater les sujets récents
 
 [script]
-min_words = 145
-max_words = 168
+min_words = 125
+max_words = 145
 max_revisions = 4          # cycles d'auto-critique du script
 
 [images]
@@ -48,11 +48,24 @@ style_suffix = "photorealistic cinematic still, sports documentary, dramatic vol
 
 [tts]
 provider = "auto"          # edge (gratuit) ; piper (hors-ligne) en secours
-edge_voice = "fr-FR-HenriNeural"
-edge_rate = "+10%"
-edge_pitch = "-2Hz"
+# IDENTITÉ VOCALE (toutes les vidéos) : narrateur masculin français de France, grave,
+# légèrement rauque, documentaire cinématographique. Ne pas modifier sans raison.
+edge_voice = "fr-FR-RemyMultilingualNeural"   # la plus grave et la plus expressive des voix fr-FR masculines (F0 ≈ 107 Hz)
+edge_rate = "-4%"          # débit posé, jamais précipité
+edge_pitch = "-5Hz"        # plus grave
+voice_color = 0.35         # chaleur des graves + léger grain rauque (0 = voix brute)
 piper_voice = "fr_FR-tom-medium"
-gap = 0.18                 # silence entre deux scènes (s)
+gap = 0.24                 # respiration entre deux scènes (s)
+section_gap = 0.55         # pause plus longue quand l'histoire change de section
+final_gap = 0.75           # silence avant la dernière phrase
+
+[tts.prosody]              # ton par section : [vitesse en %, hauteur en Hz], relatifs à la base
+hook = [-7, -2]            # mystérieux
+contexte = [0, 0]          # calme
+developpement = [2, 0]     # explications posées
+rebondissement = [7, 1]    # plus intense
+conclusion = [-6, -1]      # émotionnel
+final = [-11, -3]          # dernière phrase, marquante
 
 [audio]
 music_volume = 0.75

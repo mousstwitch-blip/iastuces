@@ -68,10 +68,15 @@ def build_timeline(cfg: dict, script: dict, voice: dict, proj: Project) -> dict:
     by_id = {v["id"]: v for v in voice["scenes"]}
     scenes, words, cursor = [], [], 0.0
     n = len(script["scenes"])
+    # respirations : plus longues aux changements de section et avant la dernière phrase
+    gaps = []
+    for i, s in enumerate(script["scenes"][:-1]):
+        nxt = script["scenes"][i + 1]
+        gaps.append(float(cfg["tts"].get("final_gap", gap)) if i + 1 == n - 1 else float(cfg["tts"].get("section_gap", gap)) if nxt["section"] != s["section"] else gap)
     for i, s in enumerate(script["scenes"]):
         v = by_id[s["id"]]
-        vo_start = cursor + (0.10 if i == 0 else gap / 2)
-        end = vo_start + v["duration"] + (1.7 if i == n - 1 else gap / 2)
+        vo_start = cursor + (0.10 if i == 0 else gaps[i - 1] / 2)
+        end = vo_start + v["duration"] + (1.7 if i == n - 1 else gaps[i] / 2)
         minimum = {"stat": 3.2, "map": 3.8 if (s.get("map") or {}).get("route") else 3.2}.get(s["type"], 1.6)
         end = max(end, cursor + minimum)
         depth = proj.images / f"scene_{s['id']:02d}_depth.png"
@@ -123,7 +128,7 @@ def step_voice(cfg: dict, llm: LLM, dossier: dict, script: dict, proj: Project) 
         new_rate = tts.shift_rate(rate, factor)
         pct = int(new_rate.rstrip("%"))
         log.info("   durée %.1f s hors cible → correction %d", dur, attempt)
-        if -4 <= pct <= 22:
+        if -14 <= pct <= 12:
             rate = new_rate
             log.info("   ajustement du débit de la voix : %s", rate)
         else:

@@ -88,17 +88,39 @@ def _trim(audio: np.ndarray, pad: float = 0.04) -> tuple[np.ndarray, float]:
     return audio[a:b], a / SR
 
 
+def color(audio: np.ndarray, amount: float) -> np.ndarray:
+    """Timbre documentaire : graves renforcés, présence, léger grain rauque (saturation douce)."""
+    if amount <= 0:
+        return audio
+    from .sound import bp, lp
+
+    y = audio + 1.0 * amount * lp(audio, 170) + 0.35 * amount * bp(audio, 1800, 3400)
+    peak = np.abs(y).max() or 1.0
+    drive = 1.0 + 2.2 * amount
+    y = np.tanh(drive * y / peak) / np.tanh(drive)
+    return (y * 0.9).astype(np.float32)
+
+
+def prosody(cfg: dict, base_rate: str, base_pitch: str, section: str, last: bool) -> tuple[str, str]:
+    """Vitesse et hauteur de la voix selon le moment de l'histoire."""
+    table = cfg["tts"].get("prosody", {})
+    dr, dp = table.get("final" if last else section, [0, 0])
+    rate = int(re.sub(r"[^\d+-]", "", base_rate) or 0) + int(dr)
+    pitch = int(re.sub(r"[^\d+-]", "", base_pitch) or 0) + int(dp)
+    return f"{'+' if rate >= 0 else ''}{rate}%", f"{'+' if pitch >= 0 else ''}{pitch}Hz"
+
+
 class Edge:
     name = "edge"
 
     def __init__(self, cfg: dict):
         self.cfg = cfg["tts"]
 
-    def synth(self, text: str, out: Path, rate: str) -> tuple[float, list[dict]]:
+    def synth(self, text: str, out: Path, rate: str, pitch: str | None = None) -> tuple[float, list[dict]]:
         import edge_tts
 
         async def run() -> list[dict]:
-            com = edge_tts.Communicate(text, self.cfg["edge_voice"], rate=rate, pitch=self.cfg.get("edge_pitch", "+0Hz"), proxy=proxy(), boundary="WordBoundary")
+            com = edge_tts.Communicate(text, self.cfg["edge_voice"], rate=rate, pitch=pitch or self.cfg.get("edge_pitch", "+0Hz"), proxy=proxy(), boundary="WordBoundary")
             bounds = []
             with open(out.with_suffix(".mp3"), "wb") as f:
                 async for chunk in com.stream():
@@ -115,7 +137,7 @@ class Edge:
                 bounds = asyncio.run(run())
                 audio = read_audio(out.with_suffix(".mp3"))
                 audio, off = _trim(audio)
-                write_wav(out, audio)
+                write_wav(out, color(audio, float(self.cfg.get("voice_color", 0))))
                 out.with_suffix(".mp3").unlink(missing_ok=True)
                 dur = len(audio) / SR
                 for b in bounds:
@@ -151,7 +173,7 @@ class Piper:
                 target.write_bytes(r.content)
         return dest
 
-    def synth(self, text: str, out: Path, rate: str) -> tuple[float, list[dict]]:
+    def synth(self, text: str, out: Path, rate: str, pitch: str | None = None) -> tuple[float, list[dict]]:
         try:
             model = self._model()
             pct = int(re.sub(r"[^\d+-]", "", rate) or 0)
@@ -164,7 +186,7 @@ class Piper:
                 raise TTSError(r.stderr[-300:])
             audio, _ = _trim(read_audio(raw))
             raw.unlink(missing_ok=True)
-            write_wav(out, audio)
+            write_wav(out, color(audio, float(self.cfg.get("voice_color", 0))))
             dur = len(audio) / SR
             return dur, proportional(display_words(text), dur)
         except (requests.RequestException, subprocess.SubprocessError, OSError) as e:
@@ -194,12 +216,13 @@ def synthesize(cfg: dict, script: dict, out_dir: Path, rate: str | None = None) 
     engines = get_engines(cfg)
     scenes = []
     engine_used = None
-    for s in script["scenes"]:
+    for k, s in enumerate(script["scenes"]):
         wav = out_dir / f"vo_{s['id']:02d}.wav"
+        s_rate, s_pitch = prosody(cfg, rate, cfg["tts"].get("edge_pitch", "+0Hz"), s.get("section", ""), k == len(script["scenes"]) - 1)
         last: Exception | None = None
         for eng in engines if engine_used is None else [engine_used]:
             try:
-                dur, words = eng.synth(s["narration"], wav, rate)
+                dur, words = eng.synth(s["narration"], wav, s_rate, s_pitch)
                 engine_used = eng
                 break
             except TTSError as e:

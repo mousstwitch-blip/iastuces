@@ -15,7 +15,7 @@ SECTIONS = ["hook", "contexte", "developpement", "rebondissement", "conclusion"]
 CAMERAS = ["push_in", "pull_out", "pan_left", "pan_right", "tilt_up", "tilt_down", "orbit"]
 TRANSITIONS = ["cut", "fade", "flash", "whip", "zoom", "glitch"]
 MOODS = ["epic", "dark", "nostalgic", "tension"]
-WORDS_PER_SECOND = 2.75  # débit mesuré de la voix à +10 %
+WORDS_PER_SECOND = 2.5  # débit mesuré de la voix documentaire (Rémy, -4 %)
 
 
 def words(text: str) -> list[str]:
