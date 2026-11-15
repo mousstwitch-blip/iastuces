@@ -358,7 +358,7 @@ class Renderer:
         sp = self.sprite(("num", sc["id"], txt), lambda: text_sprite([[(txt, (255, 255, 255))]], "anton-400.ttf", size, stroke=4, shadow=16))
         a = ease_out(t / 0.3)
         punch = 1 + 0.10 * math.exp(-max(0, t - 0.35 - count_dur) * 9) * (1 if t >= 0.35 + count_dur else 0)
-        cy = self.H * 0.33
+        cy = self.H * (0.43 if sc.get("overlay") else 0.33)  # sous le bandeau éventuel
         blit(frame, sp, self.W / 2, cy, a, punch)
         done = ease_out((t - 0.35 - count_dur * 0.7) / 0.45)
         bw = int(320 * done)
@@ -489,12 +489,12 @@ class Renderer:
     def scene_frame(self, idx: int, t_abs: float) -> np.ndarray:
         sc = self.scenes[idx]
         t = t_abs - sc["start"]
-        if sc["type"] == "stat":
+        if sc["type"] == "stat" and not (idx == 0 and sc.get("overlay")):  # le titre du hook prime sur le compteur
             frame = self.stat_frame(sc, t)
         elif sc["type"] == "map":
             frame = self.map_frame(sc, t)
         else:
-            frame = self.image_frame(sc, t)
+            frame = self.image_frame(sc, t, strength=1.0 if sc.get("depth") or sc["type"] == "image" else 1.0)
             if idx > 0:  # éclat lumineux bref à l'ouverture du plan
                 leak = 0.20 * math.exp(-max(t, 0) * 7)
                 if leak > 0.01:
