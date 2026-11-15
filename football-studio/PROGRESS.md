@@ -21,3 +21,8 @@ Inspection mesurée : aucun problème. Planche-contact relue : `projects/<projet
 ## Outils
 - `python main.py --resume <projet>` : reprise complète (appelle l'IA).
 - `python scripts/rerender.py <projet>` : refait seulement montage + inspection (aucun appel IA, ~3 min).
+
+## Vidéo n°2 (sujet Ali Dia) — interrompue
+Limite d'usage Claude atteinte (« 5-hour limit », reprise à 19 h UTC) pendant la relecture du script.
+Reprise : `python main.py --resume 20261114-il-appelle-un-club-en-se-faisant-passer-pour-geo` (recherche et brouillon conservés).
+Vidéo de référence actuelle : celle du match 149-0 (version corrigée).
