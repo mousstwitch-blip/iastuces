@@ -47,6 +47,10 @@ video = render.render_video(tl, cfg, config.DIRS["audio"] / slug / "mix.wav", pr
 rep = qc.inspect(video, tl, cfg, proj, None, None, "manual")
 final = config.DIRS["videos"] / f"{slug}.mp4"
 shutil.move(video, final)
+from studio import pipeline as _pl
+
+_pl.write_publication(json.loads((proj / "script.json").read_text()), json.loads((proj / "research.json").read_text()), rep, final)
+print("publication :", final.with_suffix(".txt"))
 print(json.dumps({k: rep["metrics"].get(k) for k in ("width", "height", "fps", "duration", "lufs", "size_mb", "captions_missing")}))
 print("problèmes :", rep["issues"] or "aucun")
 print("vidéo :", final)

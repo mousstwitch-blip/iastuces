@@ -32,3 +32,6 @@ Narrateur masculin français de France, grave, légèrement rauque, documentaire
 Réglages dans `config.toml` [tts] : voix fr-FR-RemyMultilingualNeural, -4 %, -5 Hz, voice_color 0.35,
 ton par section [tts.prosody] (mystérieux → calme → intense → émotionnel → final marquant), pauses plus longues aux changements de section.
 Budget texte recalé : 125-145 mots (2,5 mots/s). Échantillon : assets/brand/echantillon_voix.mp3
+
+## Règle utilisateur
+À la fin de chaque vidéo : donner dans la réponse la description, les hashtags, le titre YouTube et le commentaire à épingler (pack généré automatiquement dans videos/<projet>.txt).

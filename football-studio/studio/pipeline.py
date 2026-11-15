@@ -279,12 +279,45 @@ def run(cfg: dict, topic: str | None = None, category: str | None = None, resume
 
 
 def write_publication(script: dict, dossier: dict, report: dict, final: Path) -> None:
+    """Pack de publication prêt à copier-coller (TikTok / Instagram / YouTube Shorts)."""
     soc = script.get("social", {})
     m = report["metrics"]
-    lines = [soc.get("title", script.get("title", "")), "", soc.get("description", ""), "", " ".join(soc.get("hashtags", [])), "", "— Sources —"]
+    tags = [t if t.startswith("#") else "#" + t for t in soc.get("hashtags", [])]
+    for t in ("#football", "#foot", "#histoiredufoot"):
+        if t.lower() not in [x.lower() for x in tags]:
+            tags.append(t)
+    question = script["scenes"][-1]["narration"] if script.get("scenes") else ""
+    title = soc.get("title") or script.get("title", "")
+    desc = soc.get("description", "")
+    srcs = [s["title"] for s in dossier["sources"]]
+    blocking = [i["detail"] for i in report["issues"] if i["severity"] == "bloquant"]
+    lines = [
+        "═══ TIKTOK / INSTAGRAM REELS ═══",
+        desc,
+        "",
+        " ".join(tags[:10]),
+        "",
+        "═══ YOUTUBE SHORTS ═══",
+        "Titre : " + title[:95],
+        "",
+        desc,
+        "",
+        "Sources : " + "; ".join(srcs[:6]),
+        ("Illustrations générées par IA et photos (crédits photo : à compléter). " if any((ROOT / "photos" / final.stem).glob("scene_*.*")) else "Images générées par IA (illustrations). ") + "Musique et bruitages originaux.",
+        "",
+        " ".join(["#Shorts"] + tags[:4]),
+        "",
+        "═══ COMMENTAIRE À ÉPINGLER ═══",
+        question,
+        "",
+        "═══ AVANT DE PUBLIER ═══",
+        "- Activer l'étiquette « contenu généré par IA » sur chaque plateforme.",
+        "- Relire les faits : projects/" + final.stem + "/sources.md",
+        "",
+        "═══ SOURCES COMPLÈTES ═══",
+    ]
     lines += [f"{s['title']} : {s['url']}" for s in dossier["sources"]]
-    lines += ["", "— Contrôle qualité —",
+    lines += ["", "═══ CONTRÔLE QUALITÉ ═══",
               f"{m.get('width')}×{m.get('height')}, {m.get('fps')} i/s, {m.get('duration', 0):.1f} s, {m.get('lufs')} LUFS, {m.get('size_mb')} Mo",
-              "Statut : " + ("conforme" if report["ok"] else "à vérifier — " + "; ".join(i["detail"] for i in report["issues"] if i["severity"] == "bloquant")),
-              "Images générées par IA (illustrations), musique et bruitages originaux."]
+              "Statut : " + ("conforme" if not blocking else "à vérifier — " + "; ".join(blocking))]
     final.with_suffix(".txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
