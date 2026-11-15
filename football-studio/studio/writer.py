@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from .llm import LLM
+from .config import DIRS
 from .research import facts_block, prompt, system_prompt
 
 log = logging.getLogger("studio.writer")
@@ -43,6 +44,7 @@ def normalize(script: dict) -> dict:
             s["transition"] = "fade"
         s["keywords"] = [k for k in (s.get("keywords") or []) if isinstance(k, str)][:3]
         s["facts"] = s.get("facts") or []
+        s["fiction"] = bool(s.get("fiction"))
         s["type"] = s.get("type") if s.get("type") in ("image", "stat", "map") else "image"
         if s["type"] == "stat":
             st = s.get("stat") or {}
@@ -137,7 +139,10 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
             if key and key in seen_sentences:
                 add(s["id"], "bloquant", "rythme", f"phrase répétée : « {sent[:60]} »", "supprimer la répétition")
             seen_sentences.add(key)
-        if not s["facts"] and s["section"] not in ("conclusion",):
+        if s["fiction"]:
+            if not re.search(r"(?i)\b(aurai[st]?|aurait|auraient|serai[st]?|serait|seraient|pourrai[st]?|pourrait|pourraient|imagin\w*|et si|peut-être|aurions|serions)\b", s["narration"]):
+                add(s["id"], "bloquant", "fait", "scène fictive racontée comme un fait réel", "conditionnel obligatoire (« aurait », « imaginez »)")
+        elif not s["facts"] and s["section"] not in ("conclusion",):
             add(s["id"], "mineur", "fait", "aucun fait de la fiche référencé", "rattacher la scène à des identifiants de faits")
         bad = [f for f in s["facts"] if f not in known]
         if bad:
@@ -166,9 +171,14 @@ def write_script(cfg: dict, llm: LLM, dossier: dict, workdir: Path) -> dict:
     facts = facts_block(dossier)
     topic = dossier["topic"]
     draft = workdir / "script_draft.json"
+    extra = ""
+    if topic.get("notes"):
+        extra += "\n\nINDICATIONS DU RÉALISATEUR (à suivre, SAUF si un élément contredit la fiche de faits : corrige-le alors avec le fait exact) :\n" + topic["notes"]
+    if topic.get("fiction"):
+        extra += "\n\n" + (DIRS["prompts"] / "fiction.md").read_text(encoding="utf-8")
     script = normalize(json.loads(draft.read_text(encoding="utf-8"))) if draft.exists() else normalize(
         llm.json(
-            prompt("script", topic=topic["title"], angle=topic.get("angle", ""), facts=facts, min_words=sc["min_words"], max_words=sc["max_words"]),
+            prompt("script", topic=topic["title"], angle=topic.get("angle", ""), facts=facts, min_words=sc["min_words"], max_words=sc["max_words"]) + extra,
             system=system_prompt(),
         )
     )

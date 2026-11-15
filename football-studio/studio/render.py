@@ -500,6 +500,11 @@ class Renderer:
                 if leak > 0.01:
                     frame = cv2.addWeighted(frame, 1.0, np.full_like(frame, (255, 214, 170)), leak, 0)
         self.draw_overlay(frame, sc, t, hook=idx in (0, len(self.scenes) - 1))
+        if sc.get("fiction"):  # étiquette permanente : le spectateur sait que c'est une hypothèse
+            tag = self.sprite("fiction", lambda: text_sprite([[("SCÉNARIO FICTIF", (255, 255, 255))]], "montserrat-800.ttf", 34, stroke=3, shadow=4))
+            x0, y0 = self.W - tag.shape[1] - 50, 150
+            cv2.rectangle(frame, (x0 - 6, y0 - 4), (x0 + tag.shape[1] + 6, y0 + tag.shape[0] + 4), (200, 40, 50), -1)
+            blit(frame, tag, x0 + tag.shape[1] / 2, y0 + tag.shape[0] / 2)
         return frame
 
     def transition(self, kind: str, a: np.ndarray, b: np.ndarray, p: float, seed: int) -> np.ndarray:

@@ -70,7 +70,8 @@ def check(cfg: dict) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--topic", "-t", help="sujet imposé")
+    ap.add_argument("--topic", "-t", help="sujet imposé (« Et si… ? » active le mode uchronie)")
+    ap.add_argument("--notes", "-n", help="indications du réalisateur : hook, scènes, fin souhaitées")
     ap.add_argument("--category", "-c", help="catégorie pour la recherche automatique de sujet")
     ap.add_argument("--resume", "-r", help="nom d'un dossier de projects/ à reprendre")
     ap.add_argument("--provider", help="force le fournisseur LLM (claude_cli, anthropic, openai, pollinations)")
@@ -94,7 +95,7 @@ def main() -> int:
         return check(cfg)
     setup_logging(DIRS["logs"] / f"{dt.datetime.now():%Y%m%d-%H%M%S}.log", args.verbose)
     try:
-        pipeline.run(cfg, topic=args.topic, category=args.category, resume=args.resume)
+        pipeline.run(cfg, topic=args.topic, category=args.category, resume=args.resume, notes=args.notes)
     except KeyboardInterrupt:
         print("\nInterrompu. Reprends avec : python main.py --resume <dossier du projet>")
         return 130

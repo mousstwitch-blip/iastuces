@@ -9,6 +9,8 @@ SCRIPT :
 CONTRÔLES AUTOMATIQUES DÉJÀ EFFECTUÉS (à corriger s'ils signalent un problème) :
 {{auto_issues}}
 
+Si des scènes portent "fiction": true (mode uchronie) : elles sont autorisées à imaginer, mais doivent être au conditionnel et ne jamais déformer un fait réel ; toutes les autres scènes restent soumises à la fiche.
+
 Vérifie :
 1. FAITS — chaque affirmation de la narration est-elle soutenue par la fiche ? Dates, chiffres, noms exacts ? Un fait "incertain" est-il présenté comme certain ? (bloquant)
 2. LANGUE — fautes d'orthographe, de grammaire, de conjugaison. (bloquant)

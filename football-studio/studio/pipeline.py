@@ -34,11 +34,15 @@ class Project:
 
 
 # ───────────────────────────── Étapes ─────────────────────────────
-def step_topic(cfg: dict, llm: LLM, topic: str | None, category: str | None) -> tuple[Project, dict]:
+def step_topic(cfg: dict, llm: LLM, topic: str | None, category: str | None, notes: str | None = None) -> tuple[Project, dict]:
     """Choisit (ou reçoit) le sujet puis constitue le dossier de faits vérifiés."""
     if topic:
         log.info("① Sujet imposé : %s", topic)
         candidates = [research.plan_topic(llm, topic)]
+        candidates[0]["notes"] = notes or ""
+        candidates[0]["fiction"] = topic.strip().lower().startswith("et si")
+        if candidates[0]["fiction"]:
+            log.info("   mode uchronie : faits réels vérifiés + hypothèse clairement signalée")
     else:
         log.info("① Recherche d'un sujet…")
         candidates = research.find_topic(llm, category)
@@ -82,7 +86,7 @@ def build_timeline(cfg: dict, script: dict, voice: dict, proj: Project) -> dict:
         depth = proj.images / f"scene_{s['id']:02d}_depth.png"
         scenes.append({
             "id": s["id"], "section": s["section"], "type": s["type"], "start": round(cursor, 3), "end": round(end, 3), "vo_start": round(vo_start, 3),
-            "camera": s["camera"], "transition": s["transition"], "narration": s["narration"], "overlay": s.get("overlay"), "stat": s.get("stat"), "map": s.get("map"),
+            "camera": s["camera"], "transition": s["transition"], "narration": s["narration"], "overlay": s.get("overlay"), "stat": s.get("stat"), "map": s.get("map"), "fiction": bool(s.get("fiction")),
             "route": bool((s.get("map") or {}).get("route")), "image": str(proj.images / f"scene_{s['id']:02d}.jpg"), "depth": str(depth) if depth.exists() else None,
         })
         kw = {render._norm(tok) for k in s.get("keywords", []) for tok in k.split() if len(render._norm(tok)) > 2}
@@ -186,7 +190,7 @@ def plan_fixes(report: dict, script: dict | None = None) -> dict:
 
 
 # ───────────────────────────── Pipeline complet ─────────────────────────────
-def run(cfg: dict, topic: str | None = None, category: str | None = None, resume: str | None = None) -> Path:
+def run(cfg: dict, topic: str | None = None, category: str | None = None, resume: str | None = None, notes: str | None = None) -> Path:
     t0 = time.time()
     llm = get_llm(cfg)
 
@@ -197,7 +201,7 @@ def run(cfg: dict, topic: str | None = None, category: str | None = None, resume
             raise RuntimeError(f"projet « {resume} » introuvable ou sans dossier de recherche")
         log.info("Reprise du projet %s", resume)
     else:
-        proj, dossier = step_topic(cfg, llm, topic, category)
+        proj, dossier = step_topic(cfg, llm, topic, category, notes)
 
     script = _load(proj.dir / "script.json")
     if script is None:
