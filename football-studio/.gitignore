@@ -1,0 +1,16 @@
+.env
+__pycache__/
+*.pyc
+# productions (régénérables)
+images/*
+audio/*
+videos/*
+projects/*
+logs/*
+assets/models/*
+!images/.gitkeep
+!audio/.gitkeep
+!videos/.gitkeep
+!projects/.gitkeep
+!logs/.gitkeep
+!assets/models/.gitkeep
