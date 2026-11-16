@@ -296,7 +296,7 @@ def write_publication(script: dict, dossier: dict, report: dict, final: Path) ->
     for t in ("#football", "#foot", "#histoiredufoot"):
         if t.lower() not in [x.lower() for x in tags]:
             tags.append(t)
-    question = script["scenes"][-1]["narration"] if script.get("scenes") else ""
+    question = next((sc["narration"] for sc in reversed(script.get("scenes", [])) if "?" in sc["narration"]), "")
     title = soc.get("title") or script.get("title", "")
     desc = soc.get("description", "")
     srcs = [s["title"] for s in dossier["sources"]]

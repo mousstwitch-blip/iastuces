@@ -61,7 +61,7 @@ def text_sprite(lines: list[list[tuple[str, tuple]]], font_name: str, size: int,
                 line_gap: float = 0.12, align: str = "center", scales: dict | None = None) -> np.ndarray:
     """Rend un bloc de texte en RGBA. `lines` = lignes de segments (texte, couleur RGB)."""
     def safe(t: str) -> str:  # caractères absents des polices (espaces fines, ≈, emojis…)
-        t = t.replace("\u202f", " ").replace("\u00a0", " ").replace("≈", "~").replace("×", "x")
+        t = t.replace("\u202f", " ").replace("\u00a0", " ").replace("≈", "~").replace("×", "x").replace("→", "–").replace("➜", "–").replace("⇒", "–")
         return "".join(ch for ch in t if ord(ch) < 0x250 or ch in "’‘“”…–—€")
 
     lines = [[(safe(t), c) for t, c in ln] for ln in lines]
@@ -292,7 +292,7 @@ class Renderer:
         if not ov:
             return
         dur = sc["end"] - sc["start"]
-        out = 1 - smooth((t - (dur - 0.30)) / 0.25)
+        out = 1.0 if sc is self.scenes[-1] else 1 - smooth((t - (dur - 0.30)) / 0.25)  # boucle : le titre reste plein jusqu'à la dernière image
         if hook:
             def build():
                 size = 190
@@ -502,7 +502,7 @@ class Renderer:
                 if leak > 0.01:
                     frame = cv2.addWeighted(frame, 1.0, np.full_like(frame, (255, 214, 170)), leak, 0)
         self.draw_overlay(frame, sc, t, hook=idx in (0, len(self.scenes) - 1))
-        if sc.get("fiction"):  # étiquette permanente : le spectateur sait que c'est une hypothèse
+        if sc.get("fiction") and "FICTI" not in str((sc.get("overlay") or {}).get("text", "")).upper():  # étiquette permanente : le spectateur sait que c'est une hypothèse
             tag = self.sprite("fiction", lambda: text_sprite([[("SCÉNARIO FICTIF", (255, 255, 255))]], "montserrat-800.ttf", 34, stroke=3, shadow=4))
             x0, y0 = self.W - tag.shape[1] - 50, 150
             cv2.rectangle(frame, (x0 - 6, y0 - 4), (x0 + tag.shape[1] + 6, y0 + tag.shape[0] + 4), (200, 40, 50), -1)
