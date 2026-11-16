@@ -15,6 +15,7 @@ Vérifie :
 1. FAITS — chaque affirmation de la narration est-elle soutenue par la fiche ? Dates, chiffres, noms exacts ? Un fait "incertain" est-il présenté comme certain ? (bloquant)
 2. LANGUE — fautes d'orthographe, de grammaire, de conjugaison. (bloquant)
 3. DRAMATURGIE (bloquant) — l'histoire se comprend-elle sans connaissance préalable (qui fait quoi à qui) ? Le hook pose-t-il une énigme résolue seulement au rebondissement, sans révélation anticipée ? Chaque scène découle-t-elle de la précédente ? Y a-t-il un vrai dénouement (ce qu'il est advenu ensuite) avant la question finale ? Une information est-elle répétée ?
+3 ter. RÉTENTION (bloquant) — l'acte 1 promet-il une révélation finale ? Les actes 2, 3 et 4 se terminent-ils chacun par un cliffhanger ? La révélation promise arrive-t-elle bien à l'acte 5 ? Y a-t-il une question/sondage ? La dernière phrase se raccorde-t-elle à la première pour que la vidéo boucle ? Chaque phrase fait-elle 12 mots maximum ?
 3 bis. TEXTES À L'ÉCRAN (bloquant) — chaque overlay, chaque statistique (valeur, légende) et chaque nom de lieu de carte est-il exact d'après la fiche et cohérent avec ce que dit la voix au même moment ? Un overlay ou un mot-clé isolé présente-t-il comme établi ce que la narration nuance (accusation, soupçon) ?
 4. HOOK — la première phrase arrête-t-elle le défilement en 2 secondes ? (note sur 10)
 5. RYTHME — répétitions, phrases trop longues, temps morts, conclusion avec question.

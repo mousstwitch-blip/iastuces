@@ -72,6 +72,13 @@ def normalize(script: dict) -> dict:
         s["overlay"] = {"text": str(ov.get("text", "")).strip(), "sub": str(ov.get("sub") or "").strip()} if isinstance(ov, dict) and ov.get("text") else None
         s.setdefault("image_prompt", s.get("visual_description", ""))
         s.setdefault("visual_description", ""), s.setdefault("animation_prompt", ""), s.setdefault("lighting", "")
+    if len(scenes) >= 2:  # BOUCLE : la dernière image est la première (même plan, même titre)
+        first, last = scenes[0], scenes[-1]
+        last["type"], last["stat"], last["map"] = "image", None, None
+        last["image_prompt"] = first.get("image_prompt", "")
+        last["loop"] = True
+        if first.get("overlay"):
+            last["overlay"] = {"text": first["overlay"]["text"], "sub": (last.get("overlay") or {}).get("sub", "")}
     script["scenes"] = scenes
     script.setdefault("social", {"title": script.get("title", ""), "description": "", "hashtags": ["#football"]})
     return script
@@ -92,7 +99,7 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
         add(0, "bloquant", "rythme", f"narration trop courte : {n} mots (≈ {est:.0f} s)", f"ajouter {sc['min_words'] - n + 5} mots de contenu factuel issu de la fiche")
     if n > sc["max_words"]:
         add(0, "bloquant", "rythme", f"narration trop longue : {n} mots (≈ {est:.0f} s)", f"retirer {n - sc['max_words'] + 5} mots en supprimant les détails secondaires")
-    if not 9 <= len(scenes) <= 14:
+    if not 15 <= len(scenes) <= 21:
         add(0, "bloquant", "rythme", f"{len(scenes)} scènes", "viser 10 à 13 scènes")
     if scenes:
         hook = scenes[0]
@@ -102,12 +109,16 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
             add(1, "bloquant", "hook", "introduction banale", "ouvrir directement sur le fait le plus intrigant")
         if not hook.get("overlay"):
             add(1, "mineur", "visuel", "pas d'overlay sur le hook", "ajouter un overlay percutant de 2 à 5 mots")
-        if not scenes[-1]["narration"].rstrip(" »\"").endswith("?"):
-            add(len(scenes), "bloquant", "rythme", "la conclusion ne se termine pas par une question", "terminer par une question ouverte qui appelle les commentaires")
+        if not any("?" in s["narration"] for s in scenes if s["section"] == "conclusion"):
+            add(len(scenes), "bloquant", "rythme", "pas de question ni de sondage à l'acte 5", "ajouter une question ou un sondage qui appelle les commentaires")
+        for i, s in enumerate(scenes[:-1]):  # cliffhanger en fin d'acte 2, 3 et 4
+            if s["section"] in ("contexte", "developpement", "rebondissement") and scenes[i + 1]["section"] != s["section"]:
+                if not re.search(r"(\?|…|\.\.\.)\s*$|(?i)\b(mais|pourtant|sauf que|personne|pas le plus|encore|jamais|bientôt|soudain)\b", s["narration"]):
+                    add(s["id"], "bloquant", "rythme", f"l'acte « {s['section']} » ne finit pas sur un cliffhanger", "finir sur une mini-question ou « Mais ce n'est pas le plus fou… »")
     if scenes:
         last = scenes[-1]
-        if len(words(last["narration"])) > 14 or len(re.findall(r"[.!?…]+", last["narration"])) > 1:
-            add(last["id"], "bloquant", "rythme", "la scène finale ne doit contenir que la question (12 mots maximum)", "déplacer le reste dans la scène de dénouement qui précède")
+        if len(words(last["narration"])) > 14:
+            add(last["id"], "bloquant", "rythme", "la phrase de boucle doit faire 12 mots maximum", "une seule phrase courte qui rejoint la première phrase")
         if not last.get("overlay"):
             add(last["id"], "bloquant", "visuel", "pas d'overlay sur la scène finale", "overlay.text = la question résumée en 2 à 6 mots")
         if sum(s["section"] == "conclusion" for s in scenes) < 2:
@@ -130,11 +141,11 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
     seen_sentences: set[str] = set()
     for s in scenes:
         nw = len(words(s["narration"]))
-        if nw > 20:
-            add(s["id"], "bloquant", "rythme", f"scène de {nw} mots (18 maximum)", "scinder en deux scènes ou raccourcir")
+        if nw > 16:
+            add(s["id"], "bloquant", "rythme", f"scène de {nw} mots (14 maximum)", "scinder en deux scènes ou raccourcir")
         for sent in re.split(r"(?<=[.!?…])\s+", s["narration"]):
-            if len(words(sent)) > 24:
-                add(s["id"], "mineur", "rythme", f"phrase trop longue : « {sent[:60]}… »", "couper en deux phrases")
+            if len(words(sent)) > 13:
+                add(s["id"], "bloquant", "rythme", f"phrase de {len(words(sent))} mots : « {sent[:60]}… »", "une phrase = une idée, 12 mots maximum")
             key = re.sub(r"\W+", " ", sent.lower()).strip()
             if key and key in seen_sentences:
                 add(s["id"], "bloquant", "rythme", f"phrase répétée : « {sent[:60]} »", "supprimer la répétition")

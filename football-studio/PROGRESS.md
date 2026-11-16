@@ -35,3 +35,6 @@ Budget texte recalé : 125-145 mots (2,5 mots/s). Échantillon : assets/brand/ec
 
 ## Règle utilisateur
 À la fin de chaque vidéo : donner dans la réponse la description, les hashtags, le titre YouTube et le commentaire à épingler (pack généré automatiquement dans videos/<projet>.txt).
+
+## Règles de rétention (demandées par l utilisateur, stats : 7,4 s de visionnage moyen, 2,84 % de vues complètes)
+61-75 s, 5 actes, cliffhanger en fin d actes 2-4, phrases de 12 mots max, relance visuelle toutes les 2,6 s, fin en boucle (dernière image = première, dernière phrase rejoint la première), question ou sondage. Cible : 50 % de rétention à 10 s, temps moyen > 20 s.

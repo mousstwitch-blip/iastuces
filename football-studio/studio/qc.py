@@ -142,7 +142,7 @@ def inspect(video: Path, timeline: dict, cfg: dict, workdir: Path, mix_stats: di
         elif ws[-1]["end"] > sc["end"] + 0.05:
             add("sync", "bloquant", f"la phrase de la scène {sc['id']} déborde de {ws[-1]['end'] - sc['end']:.2f} s", sc["id"], sc["end"])
     tail = info["duration"] - timeline["words"][-1]["end"]
-    if tail < 1.0:
+    if tail < 0.3:
         add("sync", "bloquant", f"la vidéo s'arrête {tail:.2f} s après le dernier mot (fin tronquée)", timeline["scenes"][-1]["id"], info["duration"])
 
     an = _analyse(video)

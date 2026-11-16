@@ -80,7 +80,7 @@ def build_timeline(cfg: dict, script: dict, voice: dict, proj: Project) -> dict:
     for i, s in enumerate(script["scenes"]):
         v = by_id[s["id"]]
         vo_start = cursor + (0.10 if i == 0 else gaps[i - 1] / 2)
-        end = vo_start + v["duration"] + (1.7 if i == n - 1 else gaps[i] / 2)
+        end = vo_start + v["duration"] + (0.5 if i == n - 1 else gaps[i] / 2)
         minimum = {"stat": 3.2, "map": 3.8 if (s.get("map") or {}).get("route") else 3.2}.get(s["type"], 1.6)
         end = max(end, cursor + minimum)
         depth = proj.images / f"scene_{s['id']:02d}_depth.png"
@@ -155,7 +155,13 @@ def step_voice(cfg: dict, llm: LLM, dossier: dict, script: dict, proj: Project) 
 
 
 def step_images(cfg: dict, llm: LLM, script: dict, proj: Project, only: dict[int, str] | None = None) -> None:
-    images.produce_images(cfg, llm, script, proj.images, proj.dir, only)
+    loop = script["scenes"][-1] if script["scenes"] and script["scenes"][-1].get("loop") else None
+    gen = dict(script, scenes=script["scenes"][:-1]) if loop else script
+    images.produce_images(cfg, llm, gen, proj.images, proj.dir, {k: v for k, v in only.items() if not loop or k != loop["id"]} if only is not None else None)
+    if loop:  # dernière image = première image
+        import shutil
+
+        shutil.copyfile(proj.images / "scene_01.jpg", proj.images / f"scene_{loop['id']:02d}.jpg")
     if cfg["render"].get("depth_parallax") and images.depth_available():
         for s in script["scenes"]:
             if s["type"] == "image":

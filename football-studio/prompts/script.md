@@ -11,12 +11,15 @@ RÈGLES FACTUELLES
 - Les faits "incertain" sont interdits, sauf formulés explicitement comme incertains (« selon la légende », « aurait »).
 - N'invente ni citation, ni chiffre, ni date, ni détail.
 
-STRUCTURE NARRATIVE (durées indicatives)
-- hook (0-3 s) : UNE phrase de 12 mots maximum, extrêmement intrigante, sans « Saviez-vous », sans « Aujourd'hui ».
-- contexte (3-15 s) : qui, où, quand.
-- developpement (15-40 s) : révélations progressives, chaque scène relance la curiosité.
-- rebondissement (40-53 s) : le moment le plus surprenant ou émouvant.
-- conclusion (53-60 s) : DEUX scènes. D'abord le DÉNOUEMENT : ce qu'il est advenu ensuite (conséquences, destin des protagonistes, trace laissée) — l'histoire doit être bouclée. Puis une scène finale qui ne contient QUE la question ouverte (12 mots maximum, terminée par « ? »), qui appelle les commentaires.
+OBJECTIF N°1 : LA RÉTENTION. Le spectateur doit rester jusqu'à la dernière seconde, puis revoir la vidéo.
+
+STRUCTURE EN 5 ACTES (vidéo de 64 à 72 s ; `section` = nom de l'acte)
+- hook — ACTE 1 (0-12 s) : la scène 1 est un choc (12 mots max : chiffre, score, paradoxe). Puis 2 ou 3 scènes qui posent l'énigme et PROMETTENT une révélation à la fin (« et la fin de l'histoire va vous glacer », « retenez ce chiffre »).
+- contexte — ACTE 2 (12-24 s) : qui, où, quand. Sa DERNIÈRE scène finit par un cliffhanger (« Mais ce n'est pas le plus fou… », mini-question).
+- developpement — ACTE 3 (24-38 s) : l'escalade. Sa dernière scène finit par un cliffhanger.
+- rebondissement — ACTE 4 (38-50 s) : le tournant. Sa dernière scène finit par un cliffhanger.
+- conclusion — ACTE 5 (50-70 s) : LA RÉVÉLATION promise à l'acte 1, puis une question ou un sondage pour les commentaires (« Team A ou team B ? »), puis la DERNIÈRE scène : une phrase de BOUCLE (12 mots max) qui se termine en rejoignant la première phrase de la vidéo, de sorte qu'en revoyant la vidéo la phrase 1 la prolonge naturellement.
+  Exemple : 1re phrase « 149 buts. Tous contre son propre camp. » … dernière phrase « Et tout ça a commencé par un simple chiffre : »
 
 DRAMATURGIE (impératif)
 - Le hook pose une énigme (« comment ? », « pourquoi ? ») ; la réponse n'arrive qu'au rebondissement. Ne révèle jamais plus tôt l'issue de l'histoire.
@@ -26,8 +29,8 @@ DRAMATURGIE (impératif)
 
 STYLE
 - Narration orale, naturelle, au présent de narration de préférence. Phrases courtes (20 mots maximum). Aucun temps mort, aucune répétition.
-- Total : entre {{min_words}} et {{max_words}} mots (≈ 60 s à voix haute). C'est impératif.
-- 11 à 13 scènes ; une idée par scène ; 18 mots maximum par scène (≈ 6 s).
+- Total : entre {{min_words}} et {{max_words}} mots (≈ 68 s à voix haute). C'est impératif.
+- 16 à 20 scènes ; une idée par scène ; 14 mots maximum par scène (≈ 3 à 5 s) ; UNE PHRASE = UNE IDÉE, 12 mots maximum par phrase. Aucun temps mort.
 - Écris les nombres comme on veut les entendre (« 1958 » convient, « 2-1 » s'écrit « deux buts à un »).
 
 VISUELS (un par scène, précisément lié à ce qui est dit)
@@ -45,7 +48,7 @@ VISUELS (un par scène, précisément lié à ce qui est dit)
 - `lighting` : ambiance lumineuse en quelques mots (français).
 - `transition` (vers la scène suivante) : cut | fade | flash | whip | zoom | glitch
 - `keywords` : 1 à 3 mots de la narration à mettre en évidence dans les sous-titres (repris tels quels).
-- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots. La DERNIÈRE scène a un overlay dont `text` est la question finale résumée en 2 à 6 mots avec son « ? » (affichée en grand au centre), sans `sub`. Un overlay ou un mot-clé n'affirme jamais seul ce que la narration nuance (accusation, soupçon).
+- `overlay` : texte court incrusté (date, lieu, nom) ou null. La scène 1 a toujours un overlay percutant de 2 à 5 mots. La DERNIÈRE scène (boucle) reprend EXACTEMENT l'overlay `text` de la scène 1 (même chiffre ou score : dernière image = première image), avec `sub` = le sondage court (ex. « OUI OU NON ? »). Un overlay ou un mot-clé n'affirme jamais seul ce que la narration nuance (accusation, soupçon).
 - `stat` (type stat) : {"value": nombre, "prefix": "", "suffix": "", "label": "légende courte", "year": false} — valeur exacte issue de la fiche ; "year": true si la valeur est une année. Le suffixe est court (« M€ », « buts », « ans », « % »).
 - `map` (type map) : {"points": [{"name": "Ville", "lat": 0.0, "lon": 0.0}], "route": true|false} — 1 ou 2 points ; route=true trace un trajet du premier au second.
 

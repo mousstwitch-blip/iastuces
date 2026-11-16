@@ -9,6 +9,6 @@ SCRIPT ACTUEL :
 REMARQUES À TRAITER :
 {{issues}}
 
-Contraintes inchangées : {{min_words}} à {{max_words}} mots de narration au total, hook ≤ 12 mots, 11 à 13 scènes de 18 mots maximum, avant-dernière scène = dénouement, dernière scène = uniquement la question (≤ 12 mots), image_prompt en anglais sans nom de personne réelle, de club ni de marque.
+Contraintes inchangées : {{min_words}} à {{max_words}} mots de narration au total, 5 actes, 16 à 20 scènes de 14 mots maximum, phrases de 12 mots maximum, cliffhanger à la fin des actes 2, 3 et 4, révélation + question/sondage à l'acte 5, dernière scène = phrase de boucle qui rejoint la première, overlay de la dernière scène = overlay de la scène 1, image_prompt en anglais sans nom de personne réelle, de club ni de marque.
 
 Renvoie le script COMPLET corrigé, exactement dans le même format JSON.
