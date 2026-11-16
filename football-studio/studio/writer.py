@@ -113,7 +113,7 @@ def auto_check(script: dict, cfg: dict, dossier: dict) -> list[dict]:
             add(len(scenes), "bloquant", "rythme", "pas de question ni de sondage à l'acte 5", "ajouter une question ou un sondage qui appelle les commentaires")
         for i, s in enumerate(scenes[:-1]):  # cliffhanger en fin d'acte 2, 3 et 4
             if s["section"] in ("contexte", "developpement", "rebondissement") and scenes[i + 1]["section"] != s["section"]:
-                if not re.search(r"(\?|…|\.\.\.)\s*$|(?i)\b(mais|pourtant|sauf que|personne|pas le plus|encore|jamais|bientôt|soudain)\b", s["narration"]):
+                if not re.search(r"(\?|…|\.\.\.)\s*$|\b(mais|pourtant|sauf que|personne|pas le plus|encore|jamais|bientôt|soudain)\b", s["narration"], re.I):
                     add(s["id"], "bloquant", "rythme", f"l'acte « {s['section']} » ne finit pas sur un cliffhanger", "finir sur une mini-question ou « Mais ce n'est pas le plus fou… »")
     if scenes:
         last = scenes[-1]
